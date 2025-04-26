@@ -1,0 +1,32 @@
+/* Add Department Form Styling */
+.form-container {
+    background-color: #ab0a63; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    border: none;
+  }
+  
+  .form-label {
+    font-size: 16px;
+  }
+  
+  .form-control {
+    border: 2px solid #5a0036; /* Slightly darker border */
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .form-control:focus {
+    border-color: #c62219; /* Focus border color */
+    box-shadow: 0 0 5px rgba(198, 34, 25, 0.5);
+  }
+  
+  .btn-purple {
+    background-color: #5a0036; /* Button background color */
+    color: white;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+  }
+  
+  .btn-purple:hover {
+    background-color: #8b004d; /* Hover effect for button */
+    transform: scale(1.02); /* Slight zoom on hover */
+  }
+  
