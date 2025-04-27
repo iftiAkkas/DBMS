@@ -64,7 +64,7 @@ const Employee = () => {
               <th>DOB</th>
               <th>Address</th>
               <th>Salary</th>
-              <th>Department ID</th>
+              <th>Department </th>
               <th>Action</th>
             </tr>
           </thead>
@@ -91,7 +91,7 @@ const Employee = () => {
                 <td>{formatDate(e.DOB)}</td>
                 <td>{e.address}</td>
                 <td>{e.salary}</td>
-                <td>{e.department_id}</td>
+                <td>{e.department_name}</td>
                 <td>
                   <div className="d-flex">
                     {/* Edit and Delete buttons */}

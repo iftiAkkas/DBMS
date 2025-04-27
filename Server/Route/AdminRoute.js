@@ -51,10 +51,24 @@ router.get('/department',(req,res) => {
 })
 
 router.post('/add_department', (req, res) => {
-  const sql = "INSERT INTO department (`name`) VALUES (?)";
-  con.query(sql, [req.body.department], (err, result) => {
+  const { department } = req.body;
+
+  // Check if the department already exists (case-insensitive)
+  const checkSql = "SELECT * FROM department WHERE LOWER(name) = LOWER(?)";
+  con.query(checkSql, [department], (err, result) => {
     if (err) return res.json({ Status: false, Error: "Query Error" });
-    return res.json({ Status: true })
+
+    if (result.length > 0) {
+      // Department already exists
+      return res.json({ Status: false, Error: "Department already exists" });
+    }
+
+    // Insert the new department
+    const insertSql = "INSERT INTO department (`name`) VALUES (?)";
+    con.query(insertSql, [department], (err, result) => {
+      if (err) return res.json({ Status: false, Error: "Insert Error" });
+      return res.json({ Status: true, Message: "Department added successfully" });
+    });
   });
 });
 
@@ -85,12 +99,22 @@ router.post('/add_employee',upload.single('image'),(req, res) => {
 })
 
 router.get('/employee', (req, res) => {
-  const sql = "SELECT * FROM employee";
+  const sql = `
+    SELECT 
+      e.*, 
+      d.name AS department_name 
+    FROM 
+      employee e
+    LEFT JOIN 
+      department d 
+    ON 
+      e.department_id = d.id
+  `;
   con.query(sql, (err, result) => {
-      if(err) return res.json({Status: false, Error: "Query Error"})
-      return res.json({Status: true, Result: result})
-  })
-})
+    if (err) return res.json({ Status: false, Error: "Query Error" });
+    return res.json({ Status: true, Result: result });
+  });
+});
 
 router.get('/employee/:id',(req,res)=>{
   const id=req.params.id;

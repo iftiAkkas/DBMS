@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import "./Add_Employee.css"; // Link to the new CSS file
+import "./Employee.css"; // Link to the new CSS file
 
 const Add_Employee = () => {
   const [employee, setEmployee] = useState({
@@ -66,6 +66,7 @@ const Add_Employee = () => {
               className="form-control rounded-0"
               id="inputFirstName"
               placeholder="Enter First Name"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, first_name: e.target.value })
               }
@@ -81,6 +82,7 @@ const Add_Employee = () => {
               className="form-control rounded-0"
               id="inputLastName"
               placeholder="Enter Last Name"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, last_name: e.target.value })
               }
@@ -96,6 +98,7 @@ const Add_Employee = () => {
               className="form-control rounded-0"
               id="inputEmail"
               placeholder="Enter Email"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, email: e.target.value })
               }
@@ -111,12 +114,14 @@ const Add_Employee = () => {
               className="form-control rounded-0"
               id="inputPassword"
               placeholder="Enter Password"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, password: e.target.value })
               }
             />
           </div>
-          {/* Phone */}
+
+          {/* Phone Number */}
           <div className="col-12">
             <label htmlFor="inputPhone" className="form-label text-white">
               Phone Number
@@ -126,11 +131,13 @@ const Add_Employee = () => {
               className="form-control rounded-0"
               id="inputPhone"
               placeholder="Enter Phone Number"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, phone: e.target.value })
               }
             />
           </div>
+
           {/* Join Date */}
           <div className="col-6">
             <label htmlFor="inputJoinDate" className="form-label text-white">
@@ -140,6 +147,7 @@ const Add_Employee = () => {
               type="date"
               className="form-control rounded-0"
               id="inputJoinDate"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, join_date: e.target.value })
               }
@@ -154,6 +162,7 @@ const Add_Employee = () => {
               type="date"
               className="form-control rounded-0"
               id="inputDOB"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, dob: e.target.value })
               }
@@ -169,6 +178,7 @@ const Add_Employee = () => {
               className="form-control rounded-0"
               id="inputSalary"
               placeholder="Enter Salary"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, salary: e.target.value })
               }
@@ -184,6 +194,7 @@ const Add_Employee = () => {
               className="form-control rounded-0"
               id="inputAddress"
               placeholder="Enter Address"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, address: e.target.value })
               }
@@ -198,6 +209,7 @@ const Add_Employee = () => {
               name="category"
               id="category"
               className="form-select rounded-0"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, department_id: e.target.value })
               }
@@ -219,6 +231,7 @@ const Add_Employee = () => {
               type="file"
               className="form-control rounded-0"
               id="inputGroupFile01"
+              required
               onChange={(e) =>
                 setEmployee({ ...employee, image: e.target.files[0] })
               }

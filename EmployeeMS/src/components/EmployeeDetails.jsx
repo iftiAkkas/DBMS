@@ -77,11 +77,11 @@ const EmployeePanel = () => {
             </tr>
             <tr>
               <td>Salary</td>
-              <td>${employee.salary || 'Not Available'}</td>
+              <td>{employee.salary || 'Not Available'}</td>
             </tr>
             <tr>
-              <td>Department ID</td>
-              <td>{employee.department_id || 'Not Available'}</td>
+              <td>Department </td>
+              <td>{employee.department_name || 'Not Available'}</td>
             </tr>
           </tbody>
         </table>

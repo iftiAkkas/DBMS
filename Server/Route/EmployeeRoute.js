@@ -36,12 +36,24 @@ router.post("/employee_login", (req, res) => {
 
 router.get('/details/:id', (req, res) => {
     const id = req.params.id;
-    const sql = "SELECT * FROM employee where id = ?"
+    const sql = `
+        SELECT 
+            e.*, 
+            d.name AS department_name 
+        FROM 
+            employee e
+        LEFT JOIN 
+            department d 
+        ON 
+            e.department_id = d.id
+        WHERE 
+            e.id = ?
+    `;
     con.query(sql, [id], (err, result) => {
-        if(err) return res.json({Status: false});
-        return res.json(result)
-    })
-  })
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json(result);
+    });
+});
 
   router.get('/logout', (req, res) => {
     res.clearCookie('token')
@@ -77,8 +89,6 @@ router.get('/leave-requests/:employee_id', (req, res) => {
       return res.json({ Status: true, Result: result });
     });
   });
-  
-
   
 
 
