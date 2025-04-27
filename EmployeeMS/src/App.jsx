@@ -17,6 +17,7 @@ import PrivateRoute from './components/PrivateRoute'
 import Leave_Request from './components/Leave_Request'
 import Admin_leave_request from './components/Admin_leave_request'
 import Employee_Panel from './components/Employee_Panel'
+import Payroll from './components/Payroll' // Import the Payroll component
 
 function App() {
   
@@ -50,6 +51,7 @@ function App() {
           <Route path='/dashboard/add_department' element={<Add_department/>}></Route>
           <Route path='/dashboard/add_employee' element={<Add_Employee/>}></Route>
           <Route path='/dashboard/edit_employee/:id'element={<Edit_Employee/>}></Route>
+          <Route path='/dashboard/payroll' element={<Payroll/>}></Route> {/* New Payroll Route */}
       </Route>
     </Routes>
 

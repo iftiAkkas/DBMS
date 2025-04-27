@@ -13,7 +13,7 @@ const EmployeePanel = () => {
     axios
       .get(`http://localhost:3000/employee/details/${id}`)
       .then((result) => {
-        setEmployee(result.data[0] || {});
+        setEmployee(result.data[0] || {}); // Adjusted to match the backend response format
       })
       .catch((err) => console.log(err));
   }, [id]);
@@ -77,10 +77,23 @@ const EmployeePanel = () => {
             </tr>
             <tr>
               <td>Salary</td>
-              <td>{employee.salary || 'Not Available'}</td>
+              <td>
+                <div>
+                  <strong>Base Salary:</strong> {employee.basic_salary || 'Not Available'}
+                </div>
+                <div>
+                  <strong>Bonus:</strong> {employee.bonus || 0}
+                </div>
+                <div>
+                  <strong>Deductions:</strong> {employee.deductions || 0}
+                </div>
+                <div>
+                  <strong>Total Salary:</strong> {employee.total_salary || 'Not Available'}
+                </div>
+              </td>
             </tr>
             <tr>
-              <td>Department </td>
+              <td>Department</td>
               <td>{employee.department_name || 'Not Available'}</td>
             </tr>
           </tbody>

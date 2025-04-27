@@ -7,7 +7,7 @@ const Employee_Panel = () => {
   const [employee, setEmployee] = useState({});
   const { id } = useParams(); // Getting the employee id from the URL params
   //const navigate = useNavigate();
-  const anvigate = useNavigate()
+  const navigate = useNavigate()
 
   // Fetch employee details on page load
   useEffect(() => {
@@ -26,7 +26,7 @@ const Employee_Panel = () => {
       .then((result) => {
         if (result.data.Status) {
           localStorage.removeItem('valid');
-          anvigate('/');
+          navigate('/');
         }
       })
       .catch((err) => console.log(err));

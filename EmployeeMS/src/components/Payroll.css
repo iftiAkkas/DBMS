@@ -1,0 +1,55 @@
+.payroll-container {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 200px; /* Add margin to separate it from the navbar */
+    color: rgb(10, 10, 10); /* Set text color to white */
+}
+
+.payroll-title {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    color: rgb(10, 10, 10); /* Ensure the title text is white */
+}
+
+.suggestion-item:hover {
+    background-color: #f1f1f1;
+}
+
+.payroll-form {
+    background-color: #8b004b;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    color: white; /* Text color changed to white */
+}
+
+.form-control:focus {
+    border-color: #8b004b;
+    box-shadow: 0px 0px 5px rgba(139, 0, 75, 0.5); /* Adjusted shadow color */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white; /* Text color changed to white */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    color: white; /* Text color remains white */
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white; /* Text color changed to white */
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: white; /* Text color remains white */
+}

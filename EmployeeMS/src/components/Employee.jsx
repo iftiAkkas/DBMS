@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Employee = () => {
   const [employee, setEmployee] = useState([]); // Employee data state
-  const navigate = useNavigate();
+  const [departments, setDepartments] = useState([]); // Department data state
+  const [query, setQuery] = useState(""); // Search query
+  const [selectedDepartment, setSelectedDepartment] = useState(""); // Selected department
 
   useEffect(() => {
     // Fetch employee data from the API
@@ -13,6 +15,18 @@ const Employee = () => {
       .then((result) => {
         if (result.data.Status) {
           setEmployee(result.data.Result); // Set employee data
+        } else {
+          alert(result.data.Error); // Handle errors if any
+        }
+      })
+      .catch((err) => console.log(err)); // Log any errors
+
+    // Fetch department data from the API
+    axios
+      .get("http://localhost:3000/auth/department")
+      .then((result) => {
+        if (result.data.Status) {
+          setDepartments(result.data.Result); // Set department data
         } else {
           alert(result.data.Error); // Handle errors if any
         }
@@ -32,15 +46,31 @@ const Employee = () => {
   };
 
   const handleDelete = (id) => {
-    axios.delete('http://localhost:3000/auth/delete_employee/'+id)
-    .then(result => {
-        if(result.data.Status) {
-            window.location.reload()
+    axios
+      .delete("http://localhost:3000/auth/delete_employee/" + id)
+      .then((result) => {
+        if (result.data.Status) {
+          window.location.reload();
         } else {
-            alert(result.data.Error)
+          alert(result.data.Error);
         }
-    })
-  } 
+      });
+  };
+
+  const handleSearch = () => {
+    axios
+      .get(
+        `http://localhost:3000/auth/search_employee?query=${query}&department_name=${selectedDepartment}`
+      )
+      .then((result) => {
+        if (result.data.Status) {
+          setEmployee(result.data.Result); // Update employee list with search results
+        } else {
+          setEmployee([]); // Clear employee list if no results
+        }
+      })
+      .catch((err) => console.log(err)); // Log any errors
+  };
 
   return (
     <div className="container mt-4">
@@ -51,11 +81,52 @@ const Employee = () => {
         </Link>
       </div>
 
+      {/* Search Section */}
+      <div className="row mb-4">
+        <div className="col-md-4">
+          <label htmlFor="department" className="form-label">
+            Select Department
+          </label>
+          <select
+            id="department"
+            className="form-select"
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+          >
+            <option value="">All Departments</option>
+            {departments.map((department) => (
+              <option key={department.id} value={department.name}>
+                {department.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-4">
+          <label htmlFor="search" className="form-label">
+            Search by Name or ID
+          </label>
+          <input
+            type="text"
+            id="search"
+            className="form-control"
+            placeholder="Enter name or ID"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+        <div className="col-md-4 d-flex align-items-end">
+          <button className="btn btn-primary w-100" onClick={handleSearch}>
+            Search
+          </button>
+        </div>
+      </div>
+
       {/* Render employee table directly */}
       <div className="table-responsive">
         <table className="table table-striped table-hover">
           <thead className="table-dark">
             <tr>
+              <th>ID</th>
               <th>Name</th>
               <th>Image</th>
               <th>Email</th>
@@ -64,13 +135,14 @@ const Employee = () => {
               <th>DOB</th>
               <th>Address</th>
               <th>Salary</th>
-              <th>Department </th>
+              <th>Department</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {employee.map((e) => (
               <tr key={e.id}>
+                <td>{e.id}</td>
                 <td>{e.first_name + " " + e.last_name}</td>
                 <td>
                   <img
@@ -95,8 +167,18 @@ const Employee = () => {
                 <td>
                   <div className="d-flex">
                     {/* Edit and Delete buttons */}
-                    <Link to={`/dashboard/edit_employee/` + e.id} className="btn btn-primary btn-sm me-2">Edit</Link>
-                    <button className="btn btn-danger btn-sm" onClick={()=> handleDelete(e.id)}>Delete</button>
+                    <Link
+                      to={`/dashboard/edit_employee/` + e.id}
+                      className="btn btn-primary btn-sm me-2"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(e.id)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>

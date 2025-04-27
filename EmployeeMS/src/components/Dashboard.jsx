@@ -2,23 +2,22 @@ import React from 'react';
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './dash.css'; // Import your custom CSS
-import axios from 'axios'
+import axios from 'axios';
 
 const Dashboard = () => {
+  const anvigate = useNavigate();
 
-  const anvigate = useNavigate()
-
-  axios.defaults.withCredentials = true
+  axios.defaults.withCredentials = true;
 
   const handleLogout = () => {
     axios.get('http://localhost:3000/auth/logout')
-    .then(result => {
-      if(result.data.Status) { 
-        localStorage.removeItem("valid")
-        anvigate('/')
-      }
-    })
-  }
+      .then(result => {
+        if (result.data.Status) { 
+          localStorage.removeItem("valid");
+          anvigate('/');
+        }
+      });
+  };
 
   return (
     <div className="container-fluid">
@@ -57,17 +56,16 @@ const Dashboard = () => {
                 </Link>
               </li>
               <li className="w-100">
-              <Link
-              to="/dashboard/leave-requests"
-            className="nav-link text-white px-0 align-middle"
-              >
-            <i className="bi bi-calendar-check fs-4 ms-2"></i>
-            <span className="ms-2 d-none d-sm-inline">
-              Leave Requests
-              </span>
-            </Link>
-            </li>
-
+                <Link
+                  to="/dashboard/leave-requests"
+                  className="nav-link text-white px-0 align-middle"
+                >
+                  <i className="bi bi-calendar-check fs-4 ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">
+                    Leave Requests
+                  </span>
+                </Link>
+              </li>
               <li className="w-100">
                 <Link
                   to="/dashboard/department"
@@ -77,10 +75,17 @@ const Dashboard = () => {
                   <span className="ms-2 d-none d-sm-inline">Department</span>
                 </Link>
               </li>
-
+              <li className="w-100">
+                <Link
+                  to="/dashboard/payroll"
+                  className="nav-link text-white px-0 align-middle"
+                >
+                  <i className="bi bi-cash-stack fs-4 ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">Payroll</span>
+                </Link>
+              </li>
               <li className="w-100" onClick={handleLogout}>
                 <Link
-                  //to="/logout"
                   className="nav-link text-white px-0 align-middle"
                 >
                   <i className="bi bi-box-arrow-right fs-4 ms-2"></i>

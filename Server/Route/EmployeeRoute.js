@@ -39,13 +39,21 @@ router.get('/details/:id', (req, res) => {
     const sql = `
         SELECT 
             e.*, 
-            d.name AS department_name 
+            d.name AS department_name,
+            IFNULL(p.basic_salary, 0) AS basic_salary, 
+            IFNULL(p.bonus, 0) AS bonus, 
+            IFNULL(p.deductions, 0) AS deductions, 
+            (IFNULL(p.basic_salary, 0) + IFNULL(p.bonus, 0) - IFNULL(p.deductions, 0)) AS total_salary
         FROM 
             employee e
         LEFT JOIN 
             department d 
         ON 
             e.department_id = d.id
+        LEFT JOIN 
+            payroll p
+        ON 
+            e.id = p.employee_id
         WHERE 
             e.id = ?
     `;

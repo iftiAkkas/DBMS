@@ -125,8 +125,9 @@ router.get('/employee/:id',(req,res)=>{
   })
 })
 
-router.put('/edit_employee/:id',upload.single('image'),(req,res)=>{
+router.put('/edit_employee/:id', upload.single('image'), (req, res) => {
   const id = req.params.id;
+
   const sql = `
         UPDATE employee
         SET 
@@ -136,34 +137,31 @@ router.put('/edit_employee/:id',upload.single('image'),(req,res)=>{
             password = ?, 
             phone = ?, 
             join_date = ?, 
-            dob = ?, 
             salary = ?, 
             address = ?, 
-            department_id = ?, 
-            image = ?
+            department_id = ?
         WHERE id = ?`;
 
-        const values = [
-          req.body.first_name,
-          req.body.last_name,
-          req.body.email,
-          req.body.password, // Ensure proper hashing if storing plain passwords
-          req.body.phone,
-          req.body.join_date,
-          req.body.dob,
-          req.body.salary,
-          req.body.address,
-          req.body.department_id,
-          req.file ? req.file.filename : null, // Handle optional image file
-      ];   
+  const values = [
+    req.body.first_name,
+    req.body.last_name,
+    req.body.email,
+    req.body.password, // Ensure proper hashing if storing plain passwords
+    req.body.phone,
+    req.body.join_date,
+    req.body.salary,
+    req.body.address,
+    req.body.department_id,
+    id, // Add the ID as the last parameter
+  ];
 
-      con.query(sql, [...values, id], (err, result) => {
-        if (err) {
-            return res.json({ Status: false, Error: 'Query Error: ' + err });
-        }
-        return res.json({ Status: true, Result: result });
-    });
-})
+  con.query(sql, values, (err, result) => {
+    if (err) {
+      return res.json({ Status: false, Error: 'Query Error: ' + err });
+    }
+    return res.json({ Status: true, Result: result });
+  });
+});
 
 router.delete('/delete_employee/:id', (req, res) => {
   const id = req.params.id;
@@ -270,8 +268,93 @@ router.get('/logout', (req, res) => {
 });
 
 
-  
+router.get('/search_employee', (req, res) => {
+  const { query, department_name } = req.query;
 
+  let sql = `
+    SELECT 
+      e.id, e.first_name, e.last_name, e.salary, e.email, e.phone, e.join_date, e.DOB, e.address, e.image, d.name AS department_name 
+    FROM 
+      employee e
+    LEFT JOIN 
+      department d 
+    ON 
+      e.department_id = d.id
+    WHERE 
+      (e.first_name LIKE ? OR e.last_name LIKE ? OR e.id LIKE ?)
+  `;
 
+  const params = [`%${query}%`, `%${query}%`, `%${query}%`];
+  if (department_name) {
+    sql += ` AND d.name LIKE ?`;
+    params.push(`%${department_name}%`);
+  }
+
+  con.query(sql, params, (err, result) => {
+    if (err) {
+      return res.json({ Status: false, Error: "Query Error" });
+    }
+    return res.json({ Status: true, Result: result });
+  });
+});
+
+router.post('/update_payroll', (req, res) => {
+  const { employee_id, basic_salary, bonus, deductions, total_salary } = req.body;
+
+  // Ensure no NULL values are passed to the database
+  const safeBasicSalary = basic_salary || 0;
+  const safeBonus = bonus || 0;
+  const safeDeductions = deductions || 0;
+  const safeTotalSalary = total_salary || 0;
+
+  const sql = `
+    UPDATE payroll 
+    SET basic_salary = ?, bonus = ?, deductions = ?, total_salary = ?
+    WHERE employee_id = ?
+  `;
+
+  con.query(
+    sql,
+    [safeBasicSalary, safeBonus, safeDeductions, safeTotalSalary, employee_id],
+    (err, result) => {
+      if (err) return res.json({ Status: false, Error: "Update Error" });
+      return res.json({ Status: true, Message: "Payroll updated successfully!" });
+    }
+  );
+});
+
+router.post('/apply_bonus_deductions', (req, res) => {
+  const { bonus, deductions, department_id } = req.body;
+
+  let sql;
+  let params;
+
+  if (department_id) {
+    // Apply to a specific department
+    sql = `
+      UPDATE payroll 
+      INNER JOIN employee ON payroll.employee_id = employee.id
+      SET payroll.bonus = ?, 
+          payroll.deductions = ?, 
+          payroll.total_salary = IFNULL(payroll.basic_salary, 0) + IFNULL(?, 0) - IFNULL(?, 0)
+      WHERE employee.department_id = ?
+    `;
+    params = [bonus || 0, deductions || 0, bonus || 0, deductions || 0, department_id];
+  } else {
+    // Apply to all employees
+    sql = `
+      UPDATE payroll 
+      SET bonus = ?, 
+          deductions = ?, 
+          total_salary = IFNULL(basic_salary, 0) + IFNULL(?, 0) - IFNULL(?, 0)
+    `;
+    params = [bonus || 0, deductions || 0, bonus || 0, deductions || 0];
+  }
+
+  con.query(sql, params, (err, result) => {
+    if (err) return res.json({ Status: false, Error: "Query Error" });
+    return res.json({ Status: true, Message: "Bonus and deductions applied successfully and total salary recalculated!" });
+  });
+});
 
 export {router as adminRouter}
